@@ -2,9 +2,12 @@
 
 #include "stdafx.h"
 
+template<class T>
+int getLength(T* array, int count) {
+	return sizeof(array) / count;
+}
 
 class Utils{
 public:
-	static int getLength(const char* arrays);
 	static int min(int a, int b);
 };

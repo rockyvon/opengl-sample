@@ -15,7 +15,7 @@ uniform mat4 projection;
 
 void main()
 {
-	fragment_position = position;
+	fragment_position = vec3(model * vec4(position, 1.0));
 	fragment_normal = mat3(transpose(inverse(model))) * vertex_normal;
 	fragment_vertex_coor = vertex_texture_coor;
 	gl_Position = projection * view * model * vec4(position, 1.0);

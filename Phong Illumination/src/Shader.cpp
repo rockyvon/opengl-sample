@@ -159,9 +159,20 @@ void ShaderManager::setUniform1f(const GLchar * name, GLfloat value)
 	glUniform1f(location, value);
 }
 
+void ShaderManager::setUniform1f(string name, GLfloat value)
+{
+	setUniform1f(name.c_str(), value);
+}
+
 void ShaderManager::setUniform3fv(const GLchar * name, GLint count, GLfloat * values) {
 	GLuint location = glGetUniformLocation(program, name);
 	glUniform3fv(location, count, values);
+	
+}
+
+void ShaderManager::setUniform3fv(string name, GLint count, GLfloat * values)
+{
+	setUniform3fv(name.c_str(), count, values);
 }
 
 void ShaderManager::setUniformMatrix4fv(const GLchar * name, GLint count, GLfloat * values)
