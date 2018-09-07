@@ -1,2 +1,2 @@
 # opengl-sample
-openGL示例项目
+openGL编程示例
