@@ -51,12 +51,17 @@ uniform LightDirectional ld;
 uniform LightPoint lps[MAX_POINT_LICHT];
 uniform LightSpot lss[MAX_SPOT_LICHT];
 uniform vec3 camera_position;
+uniform bool blinn;
 
 vec3 calculate_light_directional(LightDirectional light, vec3 normal, vec3 view_direcion)
 {
 	vec3 ambient = light.ambient * vec3(texture(material.diffuse0, fragment_vertex_coor));
 	vec3 diffuse = light.diffuse * max(dot(normalize(-light.direction), normal), 0) * vec3(texture(material.diffuse0, fragment_vertex_coor));
-	vec3 specular = light.specular * pow(max(dot(normalize(reflect(light.direction, normal)), view_direcion), 0), material.shininess) * vec3(texture(material.specular0, fragment_vertex_coor));
+	vec3 specular;
+	if(blinn)
+		specular = light.specular * pow(max(dot(normalize(normalize(-light.direction) + normalize(view_direcion)), view_direcion), 0), material.shininess) * vec3(texture(material.specular0, fragment_vertex_coor));
+	else
+		specular = light.specular * pow(max(dot(normalize(reflect(light.direction, normal)), view_direcion), 0), material.shininess) * vec3(texture(material.specular0, fragment_vertex_coor));
 	return ambient + diffuse + specular;
 }
 
@@ -64,7 +69,11 @@ vec3 calculate_light_point(LightPoint light, vec3 normal, vec3 view_direcion, ve
 {
 	vec3 ambient = light.ambient * vec3(texture(material.diffuse0, fragment_vertex_coor));
 	vec3 diffuse = light.diffuse * max(dot(normalize(-light_target), normal), 0) * vec3(texture(material.diffuse0, fragment_vertex_coor));
-	vec3 specular = light.specular * pow(max(dot(normalize(reflect(normalize(light_target), normal)), view_direcion), 0), material.shininess) * vec3(texture(material.specular0, fragment_vertex_coor));
+	vec3 specular;
+	if(blinn)
+		specular= light.specular * pow(max(dot(normalize(normalize(-light_target) + normalize(view_direcion)), view_direcion), 0), material.shininess) * vec3(texture(material.specular0, fragment_vertex_coor));
+	else
+		specular= light.specular * pow(max(dot(normalize(reflect(normalize(light_target), normal)), view_direcion), 0), material.shininess) * vec3(texture(material.specular0, fragment_vertex_coor));
 	float dis = length(light_target);
 	float attenuation  = 1/(light.c + light.l * dis + light.q * pow(dis, 2)); 
 	return attenuation * (ambient + diffuse + specular);
